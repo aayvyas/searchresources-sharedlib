@@ -33,17 +33,17 @@ import groovy.yaml.YamlSlurper
     
     // Searches for all the resources within the given scope.
     void searchAllResources() {
-         List resourcesList = []
-         def settings
+        List resourcesList = []
+        def settings
         List supportedAssetTypes
-    List excludedAssetTypes
-    
-	    def settingsFile  = new File("settings.yaml")
+        List excludedAssetTypes
+        def settingsFile = libraryResource 'settings.yaml' 
+	    // def settingsFile  = new File("settings.yaml")
 	    settings = new YamlSlurper().parse(settingsFile)
         supportedAssetTypes = settings.supportedAssetTypes
         excludedAssetTypes = settings.excludedAssetTypes
+
         // Specify the types of resources that you want to be listed
-        
         List assetTypes = supportedAssetTypes -excludedAssetTypes
         int pageSize = 500;
         String pageToken = "";
