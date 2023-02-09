@@ -1,3 +1,5 @@
+#!/usr/bin/env groovy
+
 @Grapes(
         @Grab(group='com.google.api.grpc', module='grpc-google-cloud-asset-v1', version='3.14.0', scope='test')
 )
@@ -118,3 +120,4 @@ import groovy.yaml.YamlSlurper
         printer.close()
     } 
 
+searchAllResources()
