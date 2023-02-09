@@ -120,4 +120,7 @@ import groovy.yaml.YamlSlurper
         printer.close()
     } 
 
-searchAllResources()
+def call(){
+    searchAllResources()
+}
+
