@@ -38,7 +38,7 @@ import groovy.yaml.YamlSlurper
         List supportedAssetTypes
     List excludedAssetTypes
     
-	    def settingsFile  = new File("./settings.yaml")
+	    def settingsFile  = new File("../resources/settings.yaml")
 	    settings = new YamlSlurper().parse(settingsFile)
         supportedAssetTypes = settings.supportedAssetTypes
         excludedAssetTypes = settings.excludedAssetTypes
