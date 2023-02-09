@@ -27,22 +27,22 @@ import com.google.cloud.asset.v1.AssetServiceClient;
 import com.google.cloud.asset.v1.AssetServiceClient.SearchAllResourcesPagedResponse;
 import com.google.cloud.asset.v1.SearchAllResourcesRequest;
 import groovy.yaml.YamlSlurper
-class SearchForResources {
-    List resourcesList = []
-    private final def settings
-    private final List supportedAssetTypes
-    private final List excludedAssetTypes
-    SearchForResources() {
+
+    
+    // Searches for all the resources within the given scope.
+    void searchAllResources() {
+         List resourcesList = []
+         def settings
+        List supportedAssetTypes
+    List excludedAssetTypes
+    
 	    def settingsFile  = new File("./settings.yaml")
 	    settings = new YamlSlurper().parse(settingsFile)
         supportedAssetTypes = settings.supportedAssetTypes
         excludedAssetTypes = settings.excludedAssetTypes
-    }
-    // Searches for all the resources within the given scope.
-    public void searchAllResources() {
         // Specify the types of resources that you want to be listed
         
-        List assetTypes = this.supportedAssetTypes - this.excludedAssetTypes
+        List assetTypes = supportedAssetTypes -excludedAssetTypes
         int pageSize = 500;
         String pageToken = "";
         String orderBy = settings.orderBy==null ? "" : settings.orderBy ;
@@ -100,7 +100,7 @@ class SearchForResources {
 	        println "Error during SearchAllResources: ${e.toString}";
         } 
     }
-    private def convertToCsv(List resources){
+    def convertToCsv(List resources){
         def csvData = [["name", "resource_type", "createTime", "state", "labels", "project_no"]]
         resources.each{ resource ->
             csvData << resource
@@ -117,6 +117,4 @@ class SearchForResources {
 
         printer.close()
     } 
-}
-SearchForResources searchForResources = new SearchForResources()
-searchForResources.searchAllResources() 
+
