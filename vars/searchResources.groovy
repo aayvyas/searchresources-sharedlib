@@ -33,17 +33,20 @@ import groovy.yaml.YamlSlurper
     
     // Searches for all the resources within the given scope.
     void searchAllResources() {
+
+
         List resourcesList = []
         def settings
         List supportedAssetTypes
         List excludedAssetTypes
-        def settingsFile = libraryResource 'settings.yaml' 
-	    // def settingsFile  = new File("settings.yaml")
-	    settings = new YamlSlurper().parseText(settingsFile)
+
+	    def settingsFile  = new File("./settings.yaml")
+	    settings = new YamlSlurper().parse(settingsFile)
         supportedAssetTypes = settings.supportedAssetTypes
         excludedAssetTypes = settings.excludedAssetTypes
-
         // Specify the types of resources that you want to be listed
+        
+        def pNtoId = listAllInScope(settings.scope)
         List assetTypes = supportedAssetTypes -excludedAssetTypes
         int pageSize = 500;
         String pageToken = "";
@@ -69,7 +72,7 @@ import groovy.yaml.YamlSlurper
                 response = client.searchAllResources(request);
                 resourcesList +=response.getPage().getValues()
             }
-            println resourcesList
+            
             List resources = []
             resourcesList.eachWithIndex{ entry, idx -> 
                 def convertLabelsToString = { e -> 
@@ -87,12 +90,13 @@ import groovy.yaml.YamlSlurper
                     
                     return labels
                 }
-                def resource = [entry.displayName, entry.assetType, new Date(entry.createTime.seconds * 1000),entry.state, "{${convertLabelsToString(entry)}}", entry.project.split("/")[1]]
+                def resource = [entry.displayName, entry.assetType, new Date(entry.createTime.seconds * 1000),entry.state, "{${convertLabelsToString(entry)}}", pNtoId[entry.project.split("/")[1]]]
                 resources << resource
-		        println entry
+                println pNtoId[entry.project.split("/")[1]]
             }
             // converting the resourcesList to .csv
             convertToCsv(resources)
+            
         
         } catch (IOException e) {
 	        println "Failed to create client: ${e.toString()}";
@@ -107,7 +111,6 @@ import groovy.yaml.YamlSlurper
         resources.each{ resource ->
             csvData << resource
         }
-        println csvData
         
         CSVPrinter printer = new CSVPrinter(
             new PrintWriter("resources.csv"),
@@ -119,8 +122,46 @@ import groovy.yaml.YamlSlurper
 
         printer.close()
     } 
+    def listAllInScope(String scope){
+        List resourcesList = []
+        int pageSize = 500;
+        String pageToken = "";
+        String orderBy = "";
+        String scopeResource = "" //scope.split('/')[1] == "Folders" ? "Folder" : "Project"
+        List assetTypes = ["cloudresourcemanager.googleapis.com/Project"]
+        SearchAllResourcesRequest request =
+            SearchAllResourcesRequest.newBuilder()
+                .setScope(scope)
+                .setQuery("")
+                .addAllAssetTypes(assetTypes)
+                .setPageSize(pageSize)
+                .setPageToken(pageToken)
+                .setOrderBy(orderBy)
+                .build();
+	    println request
+	try{
+        	AssetServiceClient client = AssetServiceClient.create() 
+	        SearchAllResourcesPagedResponse response = client.searchAllResources(request);
+            	resourcesList += response.getPage().getValues()
+            
+            while( !response.getNextPageToken().isEmpty()){
+                request = request.toBuilder().setPageToken(response.getNextPageToken()).build();
+                response = client.searchAllResources(request);
+                resourcesList +=response.getPage().getValues()
+            }
+            def pNtoId = new HashMap()
+            resourcesList.each{ resource ->
+                pNtoId[resource.project.split('/')[1]] = resource.additionalAttributes.fields["projectId"].stringValue
+            }
+            return pNtoId
+            
+        } catch (IOException e) {
+	        println "Failed to create client: ${e.toString()}";
+        } catch (InvalidArgumentException e) {
+        	println "Invalid request: ${e.toString()}";
+        } catch (ApiException e) {
+	        println "Error during SearchAllResources: ${e.toString}";
+        } 
+    }
 
-def call(){
-    searchAllResources()
-}
-
+searchAllResources()
