@@ -235,7 +235,7 @@ import java.nio.file.Paths;
                 stage("Push to bucket"){
                     steps{
                         
-                        pushToBucket("./${WORKSPACE}/"resources.csv")    
+                        pushToBucket("./${WORKSPACE}/resources.csv")    
                         
                     }
                     
