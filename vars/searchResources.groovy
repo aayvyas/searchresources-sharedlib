@@ -94,6 +94,7 @@ import java.nio.file.Paths;
             }
             response = null
             request = null
+            client = null
             List resources = []
             resourcesList.eachWithIndex{ entry, idx -> 
                 def convertLabelsToString = { e -> 
@@ -184,6 +185,7 @@ import java.nio.file.Paths;
             }
             response = null
             request = null
+            client = null
             return pNtoId
             
         } catch (IOException e) {
