@@ -214,8 +214,8 @@ import java.nio.file.Paths;
         // Upload a blob to the newly created bucket
         BlobId blobId = BlobId.of(bucketName, "resources.csv");
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("text/plain").build();
-        
-        storage.createFrom(blobInfo,filePath);
+        byte[] content = filePath.getBytes(StandardCharsets.UTF_8);
+        storage.createFrom(blobInfo, new ByteArrayInputStream(content));
         println "Uploaded Successfully!!!"
     }
 
