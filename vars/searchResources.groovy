@@ -83,7 +83,7 @@ import java.nio.file.Paths;
                 .build();
 	    println request
         println "Sending request ..."
-	try{
+	    try{
         	AssetServiceClient client = AssetServiceClient.create() 
 	        SearchAllResourcesPagedResponse response = client.searchAllResources(request);
             	resourcesList += response.getPage().getValues()
@@ -116,11 +116,8 @@ import java.nio.file.Paths;
                 def resource = [entry.displayName, entry.assetType.split("/")[1], new Date(entry.createTime.seconds * 1000),entry.state, "{${convertLabelsToString(entry)}}", pNtoId[entry.project.split("/")[1]], entry.location]
                 resources << resource
             }
-            // converting the resourcesList to .csv
             return resources
-            
-            
-            
+        
         
         } catch (IOException e) {
 	        println "Failed to create client: ${e.toString()}";
@@ -130,7 +127,7 @@ import java.nio.file.Paths;
 	        println "Error during SearchAllResources: ${e.toString}";
         } 
     }
-    def convertToCsv(List resources, String fileName){
+    def generateCsv(List resources, String fileName){
         println "Generating csv file..."
         def csvData = [["name", "resource_type", "createTime", "state", "labels", "project_no", "location"]]
         resources.each{ resource ->
@@ -139,12 +136,7 @@ import java.nio.file.Paths;
         
         writeCSV(file: fileName, records: csvData, format: org.apache.commons.csv.CSVFormat.DEFAULT)
         println "csv generated successfully location ${fileName}"
-        
-        
-        
-        
-        
-        
+             
         // CSVPrinter printer = new CSVPrinter(
         //     new PrintWriter(fileName),
         //     CSVFormat.DEFAULT
@@ -224,6 +216,10 @@ import java.nio.file.Paths;
 
     def call(){
         def resources = []
+        /* TODO: 
+        use ${folderName}.csv 
+        */
+        def fileName = "resources.csv" 
         pipeline{
             agent any
             stages{
@@ -238,13 +234,13 @@ import java.nio.file.Paths;
                 stage("Generate CSV"){
                     steps{
                         script{
-                            convertToCsv(resources,"resources.csv" )
+                            generateCsv(resources,fileName )
                         }
                     }
                 }
                 stage("Push to bucket"){
                     steps{
-                        pushToBucket("./${WORKSPACE}/resources.csv")    
+                        pushToBucket("./${WORKSPACE}/${fileName}")    
                     }
                     
                 }
