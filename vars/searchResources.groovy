@@ -93,6 +93,7 @@ import java.nio.file.Paths;
                 resourcesList +=response.getPage().getValues()
             }
             response = null
+            request = null
             List resources = []
             resourcesList.eachWithIndex{ entry, idx -> 
                 def convertLabelsToString = { e -> 
@@ -181,6 +182,8 @@ import java.nio.file.Paths;
             resourcesList.each{ resource ->
                 pNtoId[resource.project.split('/')[1]] = resource.additionalAttributes.fields["projectId"].stringValue
             }
+            response = null
+            request = null
             return pNtoId
             
         } catch (IOException e) {
