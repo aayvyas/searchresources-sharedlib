@@ -121,7 +121,7 @@ import java.nio.charset.StandardCharsets;
             // converting the resourcesList to .csv
             def fileName = "resources.csv"
             convertToCsv(resources, fileName)
-            pushToBucket("./searchAllResources/${fileName}")
+            pushToBucket("./${WORKSPACE}/${fileName}")
             
             
         
