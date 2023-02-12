@@ -133,9 +133,9 @@ import java.nio.file.Paths;
         resources.each{ resource ->
             csvData << resource
         }
-        node {
-            writeCSV(file: filePath, records: csvData)
-        }
+        
+        writeCSV(file: filePath, records: csvData, format: org.apache.commons.csv.CSVFormat.DEFAULT)
+    
         
         
         
