@@ -55,7 +55,7 @@ import java.nio.file.Paths;
         List excludedAssetTypes
 
 	    def settingsFile  = libraryResource "settings.yaml"
-	    settings = new YamlSlurper().parseText(settingsFile)
+	    settings = new YamlSlurpeClassic().parseText(settingsFile)
         supportedAssetTypes = settings.supportedAssetTypes
         excludedAssetTypes = settings.excludedAssetTypes
         // Specify the types of resources that you want to be listed
@@ -88,7 +88,7 @@ import java.nio.file.Paths;
                 response = client.searchAllResources(request);
                 resourcesList +=response.getPage().getValues()
             }
-            
+            response = null
             List resources = []
             resourcesList.eachWithIndex{ entry, idx -> 
                 def convertLabelsToString = { e -> 
