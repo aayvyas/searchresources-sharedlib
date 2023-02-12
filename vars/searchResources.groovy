@@ -128,16 +128,16 @@ import java.nio.file.Paths;
         resources.each{ resource ->
             csvData << resource
         }
-        File file = new File(filePath)
-        CSVPrinter printer = new CSVPrinter(
-            new PrintWriter(filePath),
-            CSVFormat.DEFAULT
-        )
-        csvData.each {
-            printer.printRecord(it)
-        }
+        writeFile file: filePath, text: csvData
+        // CSVPrinter printer = new CSVPrinter(
+        //     new PrintWriter(filePath),
+        //     CSVFormat.DEFAULT
+        // )
+        // csvData.each {
+        //     printer.printRecord(it)
+        // }
 
-        printer.close()
+        // printer.close()
     } 
     def listAllInScope(String scope){
         List resourcesList = []
