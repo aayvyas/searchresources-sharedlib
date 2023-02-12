@@ -225,10 +225,11 @@ import java.nio.file.Paths;
     def call(){
         pipeline{
             agent any
+            def resources = []
             stages{
                 stage("Search Resources"){
                     steps{
-                        searchAllResources()
+                        resources = searchAllResources()
                     }
                     
                 }
