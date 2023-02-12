@@ -115,7 +115,7 @@ import java.nio.file.Paths;
                 resources << resource
             }
             // converting the resourcesList to .csv
-            def filePath = "./resources.csv"
+            def filePath = "resources.csv"
             convertToCsv(resources, filePath)
             println "csv generated successfully location ${filePath}"
             pushToBucket(filePath)
@@ -213,7 +213,7 @@ import java.nio.file.Paths;
         BlobId blobId = BlobId.of(bucketName, "resources.csv");
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("text/plain").build();
         
-        storage.createFrom(blobInfo, Paths.get(filePath));
+        storage.createFrom(blobInfo,);
         println "Uploaded Successfully!!!"
     }
 
