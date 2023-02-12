@@ -133,10 +133,9 @@ import java.nio.file.Paths;
         resources.each{ resource ->
             csvData << resource
         }
-        println csvData
-        node{
-            writeCSV(file: filePath, records: new HashMap<>(csvData), format: CSVFormat.CSV)
-        }        
+        
+        writeCSV(file: filePath, records: csvData, format: CSVFormat.CSV)
+        
         
         
         
