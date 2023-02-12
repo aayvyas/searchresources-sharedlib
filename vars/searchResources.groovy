@@ -45,7 +45,7 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.nio.file.Paths;
 
-    List resources = []
+    public def resources = []
     // Searches for all the resources within the given scope.
     def searchAllResources() {
 
@@ -225,7 +225,6 @@ import java.nio.file.Paths;
     def call(){
         pipeline{
             agent any
-            def resources = []
             stages{
                 stage("Search Resources"){
                     steps{
