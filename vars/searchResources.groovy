@@ -227,11 +227,17 @@ import java.nio.file.Paths;
             agent any
             stages{
                 stage("Search Resources"){
-                    searchAllResources()
+                    steps{
+                        searchAllResources()
+                    }
+                    
                 }
                 stage("Push to bucket"){
-                    def fileName = "resources.csv"
-                    pushToBucket("./${WORKSPACE}/${fileName}")
+                    steps{
+                        def fileName = "resources.csv"
+                        pushToBucket("./${WORKSPACE}/${fileName}")    
+                    }
+                    
                 }
             }
         }
