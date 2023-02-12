@@ -48,8 +48,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+class searchAllResources{
+
     // Searches for all the resources within the given scope.
-    void searchAllResources() {
+    void searchAllResources(def pNtoId) {
 
 
         List resourcesList = []
@@ -68,7 +70,7 @@ import java.nio.charset.StandardCharsets;
         // Specify the types of resources that you want to be listed
         
         println "Getting Projects information ... "
-        def pNtoId = listAllInScope(settings.scope)
+        
         List assetTypes = supportedAssetTypes -excludedAssetTypes
         int pageSize = 500;
         String pageToken = "";
@@ -225,6 +227,23 @@ import java.nio.charset.StandardCharsets;
         println "Uploaded Successfully!!!"
     }
 
-def call(){
-    searchAllResources()
+    def call(){
+
+        pipeline{
+            def pNtoId
+            stages{
+                stage{
+                    pNtoId = listAllInScope(settings.scope)
+                }
+                stage{
+                    searchAllResources(pNtoId)
+                }
+            }
+        }
+
+        
+
+
+    }
+
 }
