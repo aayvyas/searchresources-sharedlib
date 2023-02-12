@@ -234,8 +234,13 @@ import java.nio.file.Paths;
                 }
                 stage("Push to bucket"){
                     steps{
-                        def fileName = "resources.csv"
-                        pushToBucket("./${WORKSPACE}/${fileName}")    
+                        step{
+                            def fileName = "resources.csv"
+                        }
+                        step{
+                            pushToBucket("./${WORKSPACE}/${fileName}")    
+                        }
+                        
                     }
                     
                 }
