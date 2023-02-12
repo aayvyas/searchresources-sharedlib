@@ -48,7 +48,7 @@ import java.nio.file.Paths;
     
     // Searches for all the resources within the given scope.
     def searchAllResources() {
-        def resources = []
+        
 
         List resourcesList = []
         def settings
@@ -87,7 +87,7 @@ import java.nio.file.Paths;
         	AssetServiceClient client = AssetServiceClient.create() 
 	        SearchAllResourcesPagedResponse response = client.searchAllResources(request);
             	resourcesList += response.getPage().getValues()
-            
+                
             while( !response.getNextPageToken().isEmpty()){
                 request = request.toBuilder().setPageToken(response.getNextPageToken()).build();
                 response = client.searchAllResources(request);
@@ -96,7 +96,7 @@ import java.nio.file.Paths;
             response = null
             request = null
             client = null
-            
+            def resources = []
             resourcesList.eachWithIndex{ entry, idx -> 
                 def convertLabelsToString = { e -> 
                     if( "${e.labels}" == "[:]"){
@@ -117,7 +117,7 @@ import java.nio.file.Paths;
                 resources << resource
             }
             // converting the resourcesList to .csv
-            return resource
+            return resources
             
             
             
