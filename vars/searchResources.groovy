@@ -134,7 +134,7 @@ import java.nio.file.Paths;
             csvData << resource
         }
         
-        writeCSV(file: filePath, records: csvData, format: CSVFormat.DEFAULT)
+        writeCSV(file: filePath, records: csvData)
         
         
         
