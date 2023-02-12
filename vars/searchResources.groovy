@@ -131,7 +131,7 @@ import java.nio.file.Paths;
         }
 
         node{
-            writeFile(file: filePath, text: csvData.toString(), encoding: "UTF-8")
+            writeFile(file: filePath, text: csvData.toString())
         }        
         
         
