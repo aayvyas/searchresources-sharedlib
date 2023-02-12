@@ -129,8 +129,11 @@ import java.nio.file.Paths;
         resources.each{ resource ->
             csvData << resource
         }
+
+        node{
+            writeFile(file: filePath, text: csvData.toString(), encoding: "UTF-8")
+        }        
         
-        writeFile(file: filePath, text: csvData.toString(), encoding: "UTF-8")
         
         
         // CSVPrinter printer = new CSVPrinter(
