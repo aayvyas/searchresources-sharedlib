@@ -9,6 +9,15 @@ orderBy:
 # specify the name of resources/assets that you want to exclude from the report
 excludedAssetTypes:
   - "serviceusage.googleapis.com/Service"
+  - "identity.accesscontextmanager.googleapis.com/AccessLevel"
+  - "identity.accesscontextmanager.googleapis.com/AccessPolicy"
+  - "identity.accesscontextmanager.googleapis.com/ServicePerimeter"
+  - "storage.googleapis.com/Bucket"
+  - "cloudresourcemanager.googleapis.com/Folder"
+  - "cloudresourcemanager.googleapis.com/Organization"
+  - "cloudresourcemanager.googleapis.com/Project"
+  - "compute.googleapis.com/Route"
+
 # all supported types: https://cloud.google.com/asset-inventory/docs/supported-asset-types
 # Please don't modify the below list unless a supported type is present in the above link and not here.
 supportedAssetTypes:

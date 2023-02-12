@@ -21,6 +21,10 @@
 @Grapes(
     @Grab(group='org.codehaus.groovy', module='groovy-yaml', version='3.0.14')
 )
+@Grapes(
+    @Grab(group='com.google.cloud', module='google-cloud-storage', version='2.18.0')
+)
+
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVFormat
 import com.google.api.gax.rpc.ApiException;
@@ -30,7 +34,17 @@ import com.google.cloud.asset.v1.AssetServiceClient.SearchAllResourcesPagedRespo
 import com.google.cloud.asset.v1.SearchAllResourcesRequest;
 import groovy.yaml.YamlSlurper
 
-    
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.BucketInfo;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import java.nio.file.Paths;
+
     // Searches for all the resources within the given scope.
     void searchAllResources() {
 
@@ -46,6 +60,7 @@ import groovy.yaml.YamlSlurper
         excludedAssetTypes = settings.excludedAssetTypes
         // Specify the types of resources that you want to be listed
         
+        println "Getting Projects information ... "
         def pNtoId = listAllInScope(settings.scope)
         List assetTypes = supportedAssetTypes -excludedAssetTypes
         int pageSize = 500;
@@ -62,6 +77,7 @@ import groovy.yaml.YamlSlurper
                 .setOrderBy(orderBy)
                 .build();
 	    println request
+        println "Sending request ..."
 	try{
         	AssetServiceClient client = AssetServiceClient.create() 
 	        SearchAllResourcesPagedResponse response = client.searchAllResources(request);
@@ -90,13 +106,14 @@ import groovy.yaml.YamlSlurper
                     
                     return labels
                 }
-                def resource = [entry.displayName, entry.assetType, new Date(entry.createTime.seconds * 1000),entry.state, "{${convertLabelsToString(entry)}}", pNtoId[entry.project.split("/")[1]]]
+                def resource = [entry.displayName, entry.assetType.split("/")[1], new Date(entry.createTime.seconds * 1000),entry.state, "{${convertLabelsToString(entry)}}", pNtoId[entry.project.split("/")[1]], entry.location]
                 resources << resource
-                println pNtoId[entry.project.split("/")[1]]
             }
             // converting the resourcesList to .csv
-            convertToCsv(resources)
-            
+            def filePath = "./resources.csv"
+            convertToCsv(resources, filePath)
+            println "csv generated successfully location ${filePath}"
+            pushToBucket(filePath)
         
         } catch (IOException e) {
 	        println "Failed to create client: ${e.toString()}";
@@ -106,14 +123,14 @@ import groovy.yaml.YamlSlurper
 	        println "Error during SearchAllResources: ${e.toString}";
         } 
     }
-    def convertToCsv(List resources){
-        def csvData = [["name", "resource_type", "createTime", "state", "labels", "project_no"]]
+    def convertToCsv(List resources, String filePath){
+        def csvData = [["name", "resource_type", "createTime", "state", "labels", "project_no", "location"]]
         resources.each{ resource ->
             csvData << resource
         }
         
         CSVPrinter printer = new CSVPrinter(
-            new PrintWriter("resources.csv"),
+            new PrintWriter(filePath),
             CSVFormat.DEFAULT
         )
         csvData.each {
@@ -138,7 +155,6 @@ import groovy.yaml.YamlSlurper
                 .setPageToken(pageToken)
                 .setOrderBy(orderBy)
                 .build();
-	    println request
 	try{
         	AssetServiceClient client = AssetServiceClient.create() 
 	        SearchAllResourcesPagedResponse response = client.searchAllResources(request);
@@ -162,6 +178,28 @@ import groovy.yaml.YamlSlurper
         } catch (ApiException e) {
 	        println "Error during SearchAllResources: ${e.toString}";
         } 
+    }
+
+    // looks for resource path and pushes that to bucket
+    void pushToBucket(String filePath){
+        Storage storage = StorageOptions.getDefaultInstance().getService();
+        println "creating a bucket..."
+        // Create a bucket
+        String bucketName = "aayvyas-assets-inventory"; // Change this to something unique
+        try{
+            
+            Bucket bucket = storage.create(BucketInfo.of(bucketName));
+            println "Successfully Created ${bucketName}!!!"
+        }catch(Exception e){
+            println e.message
+        }
+        
+        // Upload a blob to the newly created bucket
+        BlobId blobId = BlobId.of(bucketName, "resources.csv");
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("text/plain").build();
+        
+        storage.createFrom(blobInfo, Paths.get(filePath));
+        println "Uploaded Successfully!!!"
     }
 
 searchAllResources()
