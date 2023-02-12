@@ -228,22 +228,16 @@ class searchResources{
     }
 
     def call(){
-
-        pipeline{
-            def pNtoId
-            stages{
-                stage{
-                    pNtoId = listAllInScope(settings.scope)
-                }
-                stage{
-                    searchAllResources(pNtoId)
+        pipeline {
+            agent any
+            stages {
+                stage('Even Stage') {
+                    steps {
+                        echo "The build number is even"
+                    }
                 }
             }
         }
-
-        
-
-
     }
 
 }
