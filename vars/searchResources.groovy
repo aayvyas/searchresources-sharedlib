@@ -55,7 +55,8 @@ import java.nio.file.Paths;
         List excludedAssetTypes
 
 	    def settingsFile  = libraryResource "settings.yaml"
-	    settings = new YamlSlurpeClassic().parseText(settingsFile)
+	    // settings = new YamlSlurper().parseText(settingsFile)
+        settings = readYaml(settingsFile)
         supportedAssetTypes = settings.supportedAssetTypes
         excludedAssetTypes = settings.excludedAssetTypes
         // Specify the types of resources that you want to be listed
