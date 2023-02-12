@@ -45,8 +45,9 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.nio.file.Paths;
 
+    List resources = []
     // Searches for all the resources within the given scope.
-    void searchAllResources() {
+    def searchAllResources() {
 
 
         List resourcesList = []
@@ -95,7 +96,7 @@ import java.nio.file.Paths;
             response = null
             request = null
             client = null
-            List resources = []
+            
             resourcesList.eachWithIndex{ entry, idx -> 
                 def convertLabelsToString = { e -> 
                     if( "${e.labels}" == "[:]"){
@@ -116,9 +117,8 @@ import java.nio.file.Paths;
                 resources << resource
             }
             // converting the resourcesList to .csv
-            def fileName = "resources.csv"
-            convertToCsv(resources, fileName)
-            pushToBucket("./${WORKSPACE}/${fileName}")
+            return resource
+            
             
             
         
@@ -232,11 +232,14 @@ import java.nio.file.Paths;
                     }
                     
                 }
+                stage("Generate CSV"){
+                    steps{
+                       
+                    }
+                }
                 stage("Push to bucket"){
                     steps{
-                        
                         pushToBucket("./${WORKSPACE}/resources.csv")    
-                        
                     }
                     
                 }
