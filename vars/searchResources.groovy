@@ -48,7 +48,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-class searchAllResources{
+class searchResources{
 
     // Searches for all the resources within the given scope.
     void searchAllResources(def pNtoId) {
