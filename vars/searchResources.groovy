@@ -93,6 +93,7 @@ import java.nio.file.Paths;
                 response = client.searchAllResources(request);
                 resourcesList +=response.getPage().getValues()
             }
+            // setting to null for deserialization error LazyMap
             response = null
             request = null
             client = null
@@ -152,6 +153,9 @@ import java.nio.file.Paths;
         int pageSize = 500;
         String pageToken = "";
         String orderBy = "";
+        /* 
+        TODO: dynamically figure out the resource manager type from scope
+        */
         String scopeResource = "" //scope.split('/')[1] == "Folders" ? "Folder" : "Project"
         List assetTypes = ["cloudresourcemanager.googleapis.com/Project"]
         SearchAllResourcesRequest request =
@@ -163,7 +167,7 @@ import java.nio.file.Paths;
                 .setPageToken(pageToken)
                 .setOrderBy(orderBy)
                 .build();
-	try{
+	    try{
         	AssetServiceClient client = AssetServiceClient.create() 
 	        SearchAllResourcesPagedResponse response = client.searchAllResources(request);
             	resourcesList += response.getPage().getValues()
@@ -177,9 +181,12 @@ import java.nio.file.Paths;
             resourcesList.each{ resource ->
                 pNtoId[resource.project.split('/')[1]] = resource.additionalAttributes.fields["projectId"].stringValue
             }
+            
+            // setting to null for deserialization error
             response = null
             request = null
             client = null
+
             return pNtoId
             
         } catch (IOException e) {
@@ -196,9 +203,11 @@ import java.nio.file.Paths;
         Storage storage = StorageOptions.getDefaultInstance().getService();
         println "creating a bucket..."
         // Create a bucket
+        /* 
+        TODO: parameterize bucketName
+        */
         String bucketName = "aayvyas-assets-inventory"; // Change this to something unique
         try{
-            
             Bucket bucket = storage.create(BucketInfo.of(bucketName));
             println "Successfully Created ${bucketName}!!!"
         }catch(Exception e){
@@ -206,6 +215,9 @@ import java.nio.file.Paths;
         }
         
         // Upload a blob to the newly created bucket
+        /* 
+        TODO: parameterize the file name
+        */
         BlobId blobId = BlobId.of(bucketName, "resources.csv");
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("text/plain").build();
         // byte[] content = filePath.getBytes(StandardCharsets.UTF_8);
@@ -216,8 +228,8 @@ import java.nio.file.Paths;
 
     def call(){
         def resources = []
-        /* TODO: 
-        use ${folderName}.csv 
+        /* 
+        TODO: use ${folderName}.csv 
         */
         def fileName = "resources.csv" 
         pipeline{
