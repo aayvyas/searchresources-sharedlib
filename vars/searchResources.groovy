@@ -119,7 +119,7 @@ import java.nio.file.Paths;
             def filePath = "resources.csv"
             convertToCsv(resources, filePath)
             println "csv generated successfully location ${filePath}"
-            pushToBucket(filePath)
+            
         
         } catch (IOException e) {
 	        println "Failed to create client: ${e.toString()}";
@@ -137,7 +137,7 @@ import java.nio.file.Paths;
         }
         
         writeCSV(file: filePath, records: csvData, format: org.apache.commons.csv.CSVFormat.DEFAULT)
-    
+        pushToBucket(csvData.toString())
         
         
         
@@ -215,7 +215,7 @@ import java.nio.file.Paths;
         BlobId blobId = BlobId.of(bucketName, "resources.csv");
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("text/plain").build();
         
-        storage.createFrom(blobInfo,Paths.get(filePath));
+        storage.createFrom(blobInfo,filePath);
         println "Uploaded Successfully!!!"
     }
 
