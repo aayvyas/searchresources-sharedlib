@@ -202,4 +202,7 @@ import java.nio.file.Paths;
         println "Uploaded Successfully!!!"
     }
 
-searchAllResources()
+
+def call(){
+    searchAllResources()
+}
