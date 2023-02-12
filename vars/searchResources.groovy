@@ -131,7 +131,7 @@ import java.nio.file.Paths;
         }
 
         node{
-            writeCSV(file: filePath, records: csvData, format: CSVFormat.CSV)
+            writeCSV(file: filePath, records: new HashMap<>(csvData), format: CSVFormat.CSV)
         }        
         
         
