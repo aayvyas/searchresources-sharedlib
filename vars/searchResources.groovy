@@ -226,8 +226,12 @@ import java.nio.file.Paths;
         pipeline{
             agent any
             stages{
-                stage{
+                stage("Search Resources"){
                     searchAllResources()
+                }
+                stage("Push to bucket"){
+                    def fileName = "resources.csv"
+                    pushToBucket("./${WORKSPACE}/${fileName}")
                 }
             }
         }
