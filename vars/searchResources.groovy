@@ -44,14 +44,9 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.nio.file.Paths;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-class searchResources{
 
     // Searches for all the resources within the given scope.
-    void searchAllResources(def pNtoId) {
+    void searchAllResources() {
 
 
         List resourcesList = []
@@ -70,7 +65,7 @@ class searchResources{
         // Specify the types of resources that you want to be listed
         
         println "Getting Projects information ... "
-        
+        def pNtoId = listAllInScope(settings.scope)
         List assetTypes = supportedAssetTypes -excludedAssetTypes
         int pageSize = 500;
         String pageToken = "";
@@ -228,16 +223,13 @@ class searchResources{
     }
 
     def call(){
-        pipeline {
+        pipeline{
             agent any
-            stages {
-                stage('Even Stage') {
-                    steps {
-                        echo "The build number is even"
-                    }
+            stages{
+                stage{
+                    searchAllResources()
                 }
             }
         }
+        
     }
-
-}
