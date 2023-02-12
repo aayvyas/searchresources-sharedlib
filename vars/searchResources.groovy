@@ -124,12 +124,13 @@ import java.nio.file.Paths;
         } 
     }
     def convertToCsv(List resources, String filePath){
+        println "Generating csv file..."
         def csvData = [["name", "resource_type", "createTime", "state", "labels", "project_no", "location"]]
         resources.each{ resource ->
             csvData << resource
         }
         node{
-            writeFile file: filePath, text: csvData
+            writeFile(file: filePath, text: csvData, encoding: "UTF-8")
         }
         
         // CSVPrinter printer = new CSVPrinter(
