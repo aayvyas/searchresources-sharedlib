@@ -119,9 +119,10 @@ import java.nio.charset.StandardCharsets;
                 resources << resource
             }
             // converting the resourcesList to .csv
-            def filePath = "resources.csv"
-            convertToCsv(resources, filePath)
-            println "csv generated successfully location ${filePath}"
+            def fileName = "resources.csv"
+            convertToCsv(resources, fileName)
+            pushToBucket("./searchAllResources/${fileName}")
+            
             
         
         } catch (IOException e) {
@@ -132,22 +133,23 @@ import java.nio.charset.StandardCharsets;
 	        println "Error during SearchAllResources: ${e.toString}";
         } 
     }
-    def convertToCsv(List resources, String filePath){
+    def convertToCsv(List resources, String fileName){
         println "Generating csv file..."
         def csvData = [["name", "resource_type", "createTime", "state", "labels", "project_no", "location"]]
         resources.each{ resource ->
             csvData << resource
         }
         
-        writeCSV(file: filePath, records: csvData, format: org.apache.commons.csv.CSVFormat.DEFAULT)
-        pushToBucket(csvData.toString())
+        writeCSV(file: fileName, records: csvData, format: org.apache.commons.csv.CSVFormat.DEFAULT)
+        println "csv generated successfully location ${fileName}"
+        
         
         
         
         
         
         // CSVPrinter printer = new CSVPrinter(
-        //     new PrintWriter(filePath),
+        //     new PrintWriter(fileName),
         //     CSVFormat.DEFAULT
         // )
         // csvData.each {
@@ -217,11 +219,11 @@ import java.nio.charset.StandardCharsets;
         // Upload a blob to the newly created bucket
         BlobId blobId = BlobId.of(bucketName, "resources.csv");
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("text/plain").build();
-        byte[] content = filePath.getBytes(StandardCharsets.UTF_8);
-        storage.createFrom(blobInfo, new ByteArrayInputStream(content));
+        // byte[] content = filePath.getBytes(StandardCharsets.UTF_8);
+        // storage.createFrom(blobInfo, new ByteArrayInputStream(content));
+        storage.createFrom(blobInfo, Paths.get(filePath))
         println "Uploaded Successfully!!!"
     }
-
 
 def call(){
     searchAllResources()
