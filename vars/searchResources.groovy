@@ -234,7 +234,7 @@ import java.nio.file.Paths;
                 }
                 stage("Generate CSV"){
                     steps{
-                       
+                       convertToCsv(resources,"resources.csv" )
                     }
                 }
                 stage("Push to bucket"){
