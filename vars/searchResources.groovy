@@ -45,10 +45,10 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.nio.file.Paths;
 
-    public def resources = []
+    
     // Searches for all the resources within the given scope.
     def searchAllResources() {
-
+        def resources = []
 
         List resourcesList = []
         def settings
@@ -223,18 +223,23 @@ import java.nio.file.Paths;
     }
 
     def call(){
+        def resources = []
         pipeline{
             agent any
             stages{
                 stage("Search Resources"){
                     steps{
-                        resources = searchAllResources()
+                        script{
+                            resources = searchAllResources()
+                        }
                     }
                     
                 }
                 stage("Generate CSV"){
                     steps{
-                       convertToCsv(resources,"resources.csv" )
+                        script{
+                            convertToCsv(resources,"resources.csv" )
+                        }
                     }
                 }
                 stage("Push to bucket"){
