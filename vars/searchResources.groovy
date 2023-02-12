@@ -128,7 +128,7 @@ import java.nio.file.Paths;
         resources.each{ resource ->
             csvData << resource
         }
-        
+        File file = new File(filePath)
         CSVPrinter printer = new CSVPrinter(
             new PrintWriter(filePath),
             CSVFormat.DEFAULT
