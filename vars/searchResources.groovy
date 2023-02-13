@@ -30,7 +30,7 @@
 )
 @Grapes(
     @Grab(group='com.google.cloud', module='google-cloud-storage', version='2.18.0')
-    @GrabConfig( systemClassLoader=true 
+    @GrabConfig( systemClassLoader=true )
 )
 
 import org.apache.commons.csv.CSVPrinter
