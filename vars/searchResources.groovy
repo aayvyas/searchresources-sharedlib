@@ -195,14 +195,14 @@ import java.nio.file.Paths;
     }
 
     // looks for resource path and pushes that to bucket
-    void pushToBucket(String filePath){
+    void pushToBucket(def filePath){
         Storage storage = StorageOptions.getDefaultInstance().getService();
         println "creating a bucket..."
         // Create a bucket
         /* 
         TODO: parameterize bucketName
         */
-        String bucketName = "aayvyas-assets-inventory"; // Change this to something unique
+        def bucketName = "aayvyas-assets-inventory"; // Change this to something unique
         try{
             Bucket bucket = storage.create(BucketInfo.of(bucketName));
             println "Successfully Created ${bucketName}!!!"
