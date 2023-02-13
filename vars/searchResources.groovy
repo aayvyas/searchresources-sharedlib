@@ -34,16 +34,10 @@ import java.nio.file.Paths;
 
     
     // Searches for all the resources within the given scope.
-    def searchAllResources() {
+    def searchAllResources(def settings) {
         List resourcesList = []
-        def settings
         List supportedAssetTypes
         List excludedAssetTypes
-
-        // reading settings.yaml
-	    def settingsFile  = libraryResource "settings.yaml"
-	    // settings = new YamlSlurper().parseText(settingsFile)
-        settings = readYaml(text: settingsFile)
 
         // list of all supported assetTypes in gcp    
         supportedAssetTypes = settings.supportedAssetTypes
@@ -226,14 +220,22 @@ import java.nio.file.Paths;
         /* 
         TODO: use ${folderName/projectName}.csv 
         */
-        def fileName = "resources.csv" 
+        // reading settings.yaml
+	    def settingsFile  = libraryResource "settings.yaml"
+	    // settings = new YamlSlurper().parseText(settingsFile)
+        def settings = readYaml(text: settingsFile)
+        def fileName = "${settings.scope.split("/")[1]}.csv".toString()
+        /* 
+        TODO: remove below fileName when moving to LBG
+        */
+        // def fileName = "resources.csv"
         pipeline{
             agent any
             stages{
                 stage("Search Resources"){
                     steps{
                         script{
-                            resources = searchAllResources()
+                            resources = searchAllResources(settings)
                         }
                     }
                     
@@ -241,7 +243,7 @@ import java.nio.file.Paths;
                 stage("Generate CSV"){
                     steps{
                         script{
-                            generateCsv(resources,fileName )
+                            generateCsv(resources,fileName)
                         }
                     }
                 }
