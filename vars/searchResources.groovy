@@ -12,14 +12,14 @@
     // @GrabConfig( systemClassLoader=true)
 ])
 
-import org.apache.commons.csv.CSVPrinter
+// import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVFormat
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.InvalidArgumentException;
 import com.google.cloud.asset.v1.AssetServiceClient;
 import com.google.cloud.asset.v1.AssetServiceClient.SearchAllResourcesPagedResponse;
 import com.google.cloud.asset.v1.SearchAllResourcesRequest;
-import groovy.yaml.YamlSlurper
+// import groovy.yaml.YamlSlurper
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -99,6 +99,7 @@ import java.nio.file.Paths;
                 def extractState = { state ->
                     switch(state) {
                         case ~/[Ee]*/:
+                            println state
                             return "ENABLED"
                         case ~/[Aa]*/:
                             return "ACTIVE"
@@ -254,7 +255,6 @@ import java.nio.file.Paths;
                             resources = searchAllResources(settings)
                         }
                     }
-                    
                 }
                 stage("Generate CSV"){
                     steps{
