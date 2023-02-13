@@ -57,8 +57,8 @@ import java.nio.file.Paths;
 
         List assetTypes = supportedAssetTypes -excludedAssetTypes
         int pageSize = 500;
-        String pageToken = "";
-        String orderBy = settings.orderBy==null ? "" : settings.orderBy ;
+        def pageToken = "";
+        def orderBy = settings.orderBy==null ? "" : settings.orderBy ;
 
         SearchAllResourcesRequest request =
             SearchAllResourcesRequest.newBuilder()
@@ -91,7 +91,7 @@ import java.nio.file.Paths;
                     if( "${e.labels}" == "[:]"){
                         return "no labels"
                     }
-                    String labels = ""
+                    def labels = ""
                     e.labels.each{ label ->
                         if(label.value == ""){
                             labels+="${label.key}, "
@@ -118,7 +118,7 @@ import java.nio.file.Paths;
             
         } 
     }
-    def generateCsv(List resources, String fileName){
+    def generateCsv(List resources, def fileName){
         println "Generating csv file..."
 
         // Building the csv record
@@ -144,15 +144,15 @@ import java.nio.file.Paths;
      * @param scope from settings.yaml
      * @return map[projectNumber] : projectId
      */
-    def projectNoToId(String scope){
+    def projectNoToId(def scope){
         List resourcesList = []
         int pageSize = 500;
-        String pageToken = "";
-        String orderBy = "";
+        def pageToken = "";
+        def orderBy = "";
         /* 
         TODO: dynamically figure out the resource manager type from scope
         */
-        String scopeResource = "Project" //scope.split('/')[1] == "Folders" ? "Folder" : "Project"
+        def scopeResource = "Project" //scope.split('/')[1] == "Folders" ? "Folder" : "Project"
         List assetTypes = ["cloudresourcemanager.googleapis.com/${scopeResource}"]
         SearchAllResourcesRequest request =
             SearchAllResourcesRequest.newBuilder()
