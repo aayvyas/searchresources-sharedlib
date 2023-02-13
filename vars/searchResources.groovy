@@ -117,6 +117,7 @@ import java.nio.file.Paths;
                             println state
                             return "NO STATE"
                         default:
+                            println state + "NO STATE"
                             return "NO STATE"
                     }
                 }
