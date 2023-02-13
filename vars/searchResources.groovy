@@ -9,7 +9,7 @@
     @Grab(group='org.apache.commons', module='commons-csv', version='1.10.0'),
     @Grab(group='org.codehaus.groovy', module='groovy-yaml', version='3.0.14'),
     @Grab(group='com.google.cloud', module='google-cloud-storage', version='2.18.0'),
-    // @GrabConfig( systemClassLoader=true) 
+    // @GrabConfig( systemClassLoader=true)
 ])
 
 import org.apache.commons.csv.CSVPrinter
@@ -57,8 +57,8 @@ import java.nio.file.Paths;
 
         List assetTypes = supportedAssetTypes -excludedAssetTypes
         int pageSize = 500;
-        def pageToken = "";
-        def orderBy = settings.orderBy==null ? "" : settings.orderBy ;
+        String pageToken = "";
+        String orderBy = settings.orderBy==null ? "" : settings.orderBy ;
 
         SearchAllResourcesRequest request =
             SearchAllResourcesRequest.newBuilder()
@@ -91,7 +91,7 @@ import java.nio.file.Paths;
                     if( "${e.labels}" == "[:]"){
                         return "no labels"
                     }
-                    def labels = ""
+                    String labels = ""
                     e.labels.each{ label ->
                         if(label.value == ""){
                             labels+="${label.key}, "
@@ -118,7 +118,7 @@ import java.nio.file.Paths;
             
         } 
     }
-    def generateCsv(List resources, def fileName){
+    def generateCsv(List resources, String fileName){
         println "Generating csv file..."
 
         // Building the csv record
@@ -144,15 +144,15 @@ import java.nio.file.Paths;
      * @param scope from settings.yaml
      * @return map[projectNumber] : projectId
      */
-    def projectNoToId(def scope){
+    def projectNoToId(String scope){
         List resourcesList = []
         int pageSize = 500;
-        def pageToken = "";
-        def orderBy = "";
+        String pageToken = "";
+        String orderBy = "";
         /* 
         TODO: dynamically figure out the resource manager type from scope
         */
-        def scopeResource = "Project" //scope.split('/')[1] == "Folders" ? "Folder" : "Project"
+        String scopeResource = "Project" //scope.split('/')[1] == "Folders" ? "Folder" : "Project"
         List assetTypes = ["cloudresourcemanager.googleapis.com/${scopeResource}"]
         SearchAllResourcesRequest request =
             SearchAllResourcesRequest.newBuilder()
@@ -195,14 +195,14 @@ import java.nio.file.Paths;
     }
 
     // looks for resource path and pushes that to bucket
-    void pushToBucket(def filePath){
+    void pushToBucket(String filePath){
         Storage storage = StorageOptions.getDefaultInstance().getService();
         println "creating a bucket..."
         // Create a bucket
         /* 
         TODO: parameterize bucketName
         */
-        def bucketName = "aayvyas-assets-inventory"; // Change this to something unique
+        String bucketName = "aayvyas-assets-inventory"; // Change this to something unique
         try{
             Bucket bucket = storage.create(BucketInfo.of(bucketName));
             println "Successfully Created ${bucketName}!!!"
@@ -247,11 +247,7 @@ import java.nio.file.Paths;
                 }
                 stage("Push to bucket"){
                     steps{
-                        script{
-                            def filePath = "./${WORKSPACE}/${fileName}"
-                            pushToBucket(filePath)    
-                        }
-                        
+                        pushToBucket("./${WORKSPACE}/${fileName}")    
                     }
                     
                 }
