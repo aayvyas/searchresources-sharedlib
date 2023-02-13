@@ -32,7 +32,6 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.nio.file.Paths;
 
-    
     // Searches for all the resources within the given scope.
     def searchAllResources(def settings) {
         List resourcesList = []
