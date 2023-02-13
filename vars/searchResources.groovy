@@ -238,11 +238,11 @@ import java.nio.file.Paths;
 	    def settingsFile  = libraryResource "settings.yaml"
 	    // settings = new YamlSlurper().parseText(settingsFile)
         def settings = readYaml(text: settingsFile)
-        def fileName = "${settings.scope.split("/")[1]}.csv".toString()
+        // def fileName = "${settings.scope.split("/")[1]}.csv".toString()
         /* 
         TODO: remove below fileName when moving to LBG
         */
-        // def fileName = "resources.csv"
+        def fileName = "resources.csv"
         def bucketName = settings.bucketName
 
         pipeline{
