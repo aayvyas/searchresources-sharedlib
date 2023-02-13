@@ -117,7 +117,7 @@ import java.nio.file.Paths;
                             println state
                             return "NO STATE"
                         default:
-                            return state
+                            return "NO STATE"
                     }
                 }
                 def resource = [entry.displayName, entry.assetType.split("/")[1], new Date(entry.createTime.seconds * 1000),extractState(entry.state), "{${convertLabelsToString(entry)}}", pNtoId[entry.project.split("/")[1]], entry.location]
