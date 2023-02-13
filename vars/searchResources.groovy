@@ -9,11 +9,8 @@
     @Grab(group='org.apache.commons', module='commons-csv', version='1.10.0'),
     @Grab(group='org.codehaus.groovy', module='groovy-yaml', version='3.0.14'),
     @Grab(group='com.google.cloud', module='google-cloud-storage', version='2.18.0'),
-    // @GrabConfig( systemClassLoader=true)
+    // @GrabConfig( systemClassLoader=true) 
 ])
-
-
-
 
 import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVFormat
@@ -38,7 +35,6 @@ import java.nio.file.Paths;
     
     // Searches for all the resources within the given scope.
     def searchAllResources() {
-        
         List resourcesList = []
         def settings
         List supportedAssetTypes
