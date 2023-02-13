@@ -98,18 +98,23 @@ import java.nio.file.Paths;
                 }
                 def extractState = { state ->
                     switch(state) {
-                        case ~/[Ee]*/:
+                        case ~/^[Ee]*/:
                             println state
                             return "ENABLED"
-                        case ~/[Aa]*/:
+                        case ~/^[Aa]*/:
+                            println state
                             return "ACTIVE"
-                        case ~/[Dd]*/:
+                        case ~/^[Dd]*/:
+                            println state
                             return "DELETED"
-                        case ~/[Tt]*/:
+                        case ~/^[Tt]*/:
+                            println state
                             return "TERMINATED"
-                        case ~/[Rr]*/:
+                        case ~/^[Rr]*/:
+                            println state
                             return "RUNNING"
                         case state.contains(" "):
+                            println state
                             return "NO STATE"
                         default:
                             return state
