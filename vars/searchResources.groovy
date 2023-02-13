@@ -153,7 +153,7 @@ import java.nio.file.Paths;
         TODO: dynamically figure out the resource manager type from scope
         */
         def scopeResource = "Project" //scope.split('/')[1] == "Folders" ? "Folder" : "Project"
-        List assetTypes = ["cloudresourcemanager.googleapis.com/${scopeResource}"]
+        def assetTypes = ["cloudresourcemanager.googleapis.com/${scopeResource}"]
         SearchAllResourcesRequest request =
             SearchAllResourcesRequest.newBuilder()
                 .setScope(scope)
