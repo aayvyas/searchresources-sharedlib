@@ -2,27 +2,35 @@
 
 @Grapes(
         @Grab(group='com.google.api.grpc', module='grpc-google-cloud-asset-v1', version='3.14.0', scope='test')
+         @GrabConfig( systemClassLoader=true )
 )
 @Grapes(
         @Grab(group='com.google.api.grpc', module='proto-google-cloud-asset-v1', version='3.14.0')
+        @GrabConfig( systemClassLoader=true )
 )
 @Grapes(
         @Grab(group='com.google.cloud', module='google-cloud-asset', version='3.14.0')
+        @GrabConfig( systemClassLoader=true )
 )
 @Grapes(
         @Grab(group='com.google.api.grpc', module='proto-google-cloud-asset-v1p7beta1', version='3.14.0')
+        @GrabConfig( systemClassLoader=true )
 )
 @Grapes(
         @Grab(group='com.google.api', module='gax-grpc', version='2.23.0')
+        @GrabConfig( systemClassLoader=true )
 )
 @Grapes(
     @Grab(group='org.apache.commons', module='commons-csv', version='1.10.0')
+    @GrabConfig( systemClassLoader=true )
 )
 @Grapes(
     @Grab(group='org.codehaus.groovy', module='groovy-yaml', version='3.0.14')
+    @GrabConfig( systemClassLoader=true )
 )
 @Grapes(
     @Grab(group='com.google.cloud', module='google-cloud-storage', version='2.18.0')
+    @GrabConfig( systemClassLoader=true 
 )
 
 import org.apache.commons.csv.CSVPrinter
@@ -49,24 +57,26 @@ import java.nio.file.Paths;
     // Searches for all the resources within the given scope.
     def searchAllResources() {
         
-
         List resourcesList = []
         def settings
         List supportedAssetTypes
         List excludedAssetTypes
 
+        // reading settings.yaml
 	    def settingsFile  = libraryResource "settings.yaml"
 	    // settings = new YamlSlurper().parseText(settingsFile)
-        
         settings = readYaml(text: settingsFile)
-        
-        
+
+        // list of all supported assetTypes in gcp    
         supportedAssetTypes = settings.supportedAssetTypes
+        // list of the irrelavant assetTypes which you want to be excluded
         excludedAssetTypes = settings.excludedAssetTypes
-        // Specify the types of resources that you want to be listed
-        
+    
         println "Getting Projects information ... "
-        def pNtoId = listAllInScope(settings.scope)
+
+        // a map of project number to project id pre-processed
+        def pNtoId = projectNoToId(settings.scope)
+
         List assetTypes = supportedAssetTypes -excludedAssetTypes
         int pageSize = 500;
         String pageToken = "";
@@ -119,24 +129,27 @@ import java.nio.file.Paths;
             }
             return resources
         
-        
         } catch (IOException e) {
 	        println "Failed to create client: ${e.toString()}";
+            
         } catch (InvalidArgumentException e) {
         	println "Invalid request: ${e.toString()}";
+            
         } catch (ApiException e) {
 	        println "Error during SearchAllResources: ${e.toString}";
+            
         } 
     }
     def generateCsv(List resources, String fileName){
         println "Generating csv file..."
+
+        // Building the csv record
         def csvData = [["name", "resource_type", "createTime", "state", "labels", "project_no", "location"]]
         resources.each{ resource ->
             csvData << resource
         }
-        
         writeCSV(file: fileName, records: csvData, format: org.apache.commons.csv.CSVFormat.DEFAULT)
-        println "csv generated successfully location ${fileName}"
+        println "csv generated successfully ${fileName}"
              
         // CSVPrinter printer = new CSVPrinter(
         //     new PrintWriter(fileName),
@@ -148,7 +161,12 @@ import java.nio.file.Paths;
 
         // printer.close()
     } 
-    def listAllInScope(String scope){
+
+    /**
+     * @param scope from settings.yaml
+     * @return map[projectNumber] : projectId
+     */
+    def projectNoToId(String scope){
         List resourcesList = []
         int pageSize = 500;
         String pageToken = "";
@@ -156,8 +174,8 @@ import java.nio.file.Paths;
         /* 
         TODO: dynamically figure out the resource manager type from scope
         */
-        String scopeResource = "" //scope.split('/')[1] == "Folders" ? "Folder" : "Project"
-        List assetTypes = ["cloudresourcemanager.googleapis.com/Project"]
+        String scopeResource = "Project" //scope.split('/')[1] == "Folders" ? "Folder" : "Project"
+        List assetTypes = ["cloudresourcemanager.googleapis.com/${scopeResource}"]
         SearchAllResourcesRequest request =
             SearchAllResourcesRequest.newBuilder()
                 .setScope(scope)
@@ -225,11 +243,10 @@ import java.nio.file.Paths;
         storage.createFrom(blobInfo, Paths.get(filePath))
         println "Uploaded Successfully!!!"
     }
-
     def call(){
         def resources = []
         /* 
-        TODO: use ${folderName}.csv 
+        TODO: use ${folderName/projectName}.csv 
         */
         def fileName = "resources.csv" 
         pipeline{

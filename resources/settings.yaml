@@ -6,6 +6,7 @@
 scope: "projects/burner-aayvyas"
 query:
 orderBy:
+bucketName:
 # specify the name of resources/assets that you want to exclude from the report
 excludedAssetTypes:
   - "serviceusage.googleapis.com/Service"
