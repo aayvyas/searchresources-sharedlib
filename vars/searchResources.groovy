@@ -96,7 +96,25 @@ import java.nio.file.Paths;
                     
                     return labels
                 }
-                def resource = [entry.displayName, entry.assetType.split("/")[1], new Date(entry.createTime.seconds * 1000),entry.state, "{${convertLabelsToString(entry)}}", pNtoId[entry.project.split("/")[1]], entry.location]
+                def extractState = { state ->
+                    switch(state) {
+                        case ~/[Ee]*:
+                            return "ENABLED"
+                        case ~/[Aa]*:
+                            return "ACTIVE"
+                        case ~/[Dd]*:
+                            return "DELETED"
+                        case ~/[Tt]*:
+                            return "TERMINATED"
+                        case ~/[Rr]*:
+                            return "RUNNING"
+                        case "":
+                            return "NO STATE"
+                        default:
+                            return state
+                    }
+                }
+                def resource = [entry.displayName, entry.assetType.split("/")[1], new Date(entry.createTime.seconds * 1000),extractState(entry.state), "{${convertLabelsToString(entry)}}", pNtoId[entry.project.split("/")[1]], entry.location]
                 resources << resource
             }
             return resources
@@ -189,7 +207,7 @@ import java.nio.file.Paths;
     }
 
     // looks for resource path and pushes that to bucket
-    void pushToBucket(String filePath, String bucketName){
+    void pushToBucket(String filePath,String fileName ,String bucketName){
         Storage storage = StorageOptions.getDefaultInstance().getService();
         println "creating a bucket..."
         // Create a bucket
@@ -204,7 +222,7 @@ import java.nio.file.Paths;
         /* 
         TODO: parameterize the file name
         */
-        BlobId blobId = BlobId.of(bucketName, "resources.csv");
+        BlobId blobId = BlobId.of(bucketName, fileName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("text/plain").build();
         // byte[] content = filePath.getBytes(StandardCharsets.UTF_8);
         // storage.createFrom(blobInfo, new ByteArrayInputStream(content));
@@ -247,7 +265,7 @@ import java.nio.file.Paths;
                 }
                 stage("Push to bucket"){
                     steps{
-                        pushToBucket("./${WORKSPACE}/${fileName}", bucketName)    
+                        pushToBucket("./${WORKSPACE}/${fileName}",fileName,bucketName)    
                     }
                     
                 }
