@@ -108,7 +108,7 @@ import java.nio.file.Paths;
                             return "TERMINATED"
                         case ~/[Rr]*/:
                             return "RUNNING"
-                        case "":
+                        case state.contains(" "):
                             return "NO STATE"
                         default:
                             return state
