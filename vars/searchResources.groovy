@@ -189,14 +189,10 @@ import java.nio.file.Paths;
     }
 
     // looks for resource path and pushes that to bucket
-    void pushToBucket(String filePath){
+    void pushToBucket(String filePath, String bucketName){
         Storage storage = StorageOptions.getDefaultInstance().getService();
         println "creating a bucket..."
         // Create a bucket
-        /* 
-        TODO: parameterize bucketName
-        */
-        String bucketName = "aayvyas-assets-inventory"; // Change this to something unique
         try{
             Bucket bucket = storage.create(BucketInfo.of(bucketName));
             println "Successfully Created ${bucketName}!!!"
@@ -229,6 +225,8 @@ import java.nio.file.Paths;
         TODO: remove below fileName when moving to LBG
         */
         // def fileName = "resources.csv"
+        def bucketName = settings.bucketName
+
         pipeline{
             agent any
             stages{
@@ -249,7 +247,7 @@ import java.nio.file.Paths;
                 }
                 stage("Push to bucket"){
                     steps{
-                        pushToBucket("./${WORKSPACE}/${fileName}")    
+                        pushToBucket("./${WORKSPACE}/${fileName}", bucketName)    
                     }
                     
                 }

@@ -3,10 +3,10 @@
 # - projects/{PROJECT_NUMBER} (e.g., "projects/12345678")
 # - folders/{FOLDER_NUMBER} (e.g., "folders/1234567")
 # - organizations/{ORGANIZATION_NUMBER} (e.g., "organizations/123456")
-scope: "projects/burner-aayvyas"
+scope: projects/burner-aayvyas
 query:
-orderBy:
-bucketName:
+orderBy: createTime
+bucketName: aayvyas-assets-inventory
 # specify the name of resources/assets that you want to exclude from the report
 excludedAssetTypes:
   - "serviceusage.googleapis.com/Service"
