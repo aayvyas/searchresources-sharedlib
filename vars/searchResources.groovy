@@ -97,29 +97,10 @@ import java.nio.file.Paths;
                     return labels
                 }
                 def extractState = { state ->
-                    switch(state) {
-                        case ~/^[Ee]/:
-                            println state
-                            return "ENABLED"
-                        case ~/^[Aa]/:
-                            println state
-                            return "ACTIVE"
-                        case ~/^[Dd]/:
-                            println state
-                            return "DELETED"
-                        case ~/^[Tt]/:
-                            println state
-                            return "TERMINATED"
-                        case ~/^[Rr]/:
-                            println state
-                            return "RUNNING"
-                        case state.contains(" "):
-                            println state
-                            return "NO STATE"
-                        default:
-                            println state + "NO STATE"
-                            return "NO STATE"
+                    if(state.contains(" ")){
+                        return "NO STATE"
                     }
+                    return state.toString().toUpperCase()
                 }
                 def resource = [entry.displayName, entry.assetType.split("/")[1], new Date(entry.createTime.seconds * 1000),extractState(entry.state), "{${convertLabelsToString(entry)}}", pNtoId[entry.project.split("/")[1]], entry.location]
                 resources << resource
