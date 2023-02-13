@@ -248,7 +248,8 @@ import java.nio.file.Paths;
                 stage("Push to bucket"){
                     steps{
                         script{
-                            pushToBucket("./${WORKSPACE}/${fileName}")    
+                            def filePath = "./${WORKSPACE}/${fileName}"
+                            pushToBucket(filePath)    
                         }
                         
                     }
