@@ -97,7 +97,7 @@ import java.nio.file.Paths;
                     return labels
                 }
                 def extractState = { state ->
-                    if(state.replace(" ", "") == null){
+                    if(state ==~ '/*'){
                         return "NO STATE"
                     }
                     return state.toString().toUpperCase()
