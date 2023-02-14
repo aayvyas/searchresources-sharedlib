@@ -225,9 +225,11 @@ import java.nio.file.Paths;
         def fileName = "resources.csv"
         def bucketName = settings.bucketName
 
-        node{
-            
-            stages{
+        // pipeline{
+        //     agent any
+                node{
+
+                
                 stage("Search Resources"){
                     steps{
                         script{
@@ -235,6 +237,8 @@ import java.nio.file.Paths;
                         }
                     }
                 }
+                }
+                node{
                 stage("Generate CSV"){
                     steps{
                         script{
@@ -242,13 +246,16 @@ import java.nio.file.Paths;
                         }
                     }
                 }
+                }
+                node{
                 stage("Push to bucket"){
                     steps{
                         pushToBucket("./${WORKSPACE}/${fileName}",fileName,bucketName)    
                     }
                     
                 }
-            }
-        }
+                }
+            
+        // }
         
     }
