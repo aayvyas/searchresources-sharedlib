@@ -148,9 +148,6 @@ import java.nio.file.Paths;
         int pageSize = 500;
         String pageToken = "";
         String orderBy = "";
-        /* 
-        TODO: dynamically figure out the resource manager type from scope
-        */
         def scopeResource = scope.split('/')[1] == "Folders" ? "Folder" : "Project"
         def assetTypes = ["cloudresourcemanager.googleapis.com/${scopeResource}".toString()]
         SearchAllResourcesRequest request =
@@ -206,9 +203,7 @@ import java.nio.file.Paths;
         }
         
         // Upload a blob to the newly created bucket
-        /* 
-        TODO: parameterize the file name
-        */
+        
         BlobId blobId = BlobId.of(bucketName, fileName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("text/plain").build();
         // byte[] content = filePath.getBytes(StandardCharsets.UTF_8);
@@ -218,9 +213,7 @@ import java.nio.file.Paths;
     }
     def call(){
         def resources = []
-        /* 
-        TODO: use ${folderName/projectName}.csv 
-        */
+        
         // reading settings.yaml
 	    def settingsFile  = libraryResource "settings.yaml"
 	    // settings = new YamlSlurper().parseText(settingsFile)
@@ -232,8 +225,8 @@ import java.nio.file.Paths;
         def fileName = "resources.csv"
         def bucketName = settings.bucketName
 
-        pipeline{
-            agent any
+        node{
+            
             stages{
                 stage("Search Resources"){
                     steps{
