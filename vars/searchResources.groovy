@@ -231,27 +231,27 @@ import java.nio.file.Paths;
 
                 
                 stage("Search Resources"){
-                    steps{
+                    
                         script{
                             resources = searchAllResources(settings)
                         }
-                    }
+                    
                 }
                 }
                 node{
                 stage("Generate CSV"){
-                    steps{
+                    
                         script{
                             generateCsv(resources,fileName)
                         }
-                    }
+                    
                 }
                 }
                 node{
                 stage("Push to bucket"){
-                    steps{
+                    
                         pushToBucket("./${WORKSPACE}/${fileName}",fileName,bucketName)    
-                    }
+                    
                     
                 }
                 }
