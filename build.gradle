@@ -1,5 +1,6 @@
 plugins {
     id 'groovy'
+    id "com.mkobit.jenkins.pipelines.shared-library" version "0.10.1"
 }
 sourceSets {
     main {
@@ -18,9 +19,13 @@ sourceSets {
 }
 
 repositories {
-    mavenCentral()
+    maven {
+        url "https://repo.jenkins-ci.org/releases/"
+    }
 }
-
+configurations {
+    ivy
+}
 dependencies {
     implementation 'org.apache.groovy:groovy:4.0.2'
     testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.4-M1-groovy-4.0'
@@ -32,8 +37,15 @@ dependencies {
     implementation group: 'com.google.api', name: 'gax-grpc', version: '2.3.0'
     implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.10.0'
     implementation group: 'com.google.cloud', name: 'google-cloud-storage', version: '2.18.0'
+    ivy 'org.apache.ivy:ivy:2.4.0'
+}
+
+tasks.withType(GroovyCompile) {
+    groovyClasspath += configurations.ivy
 }
 
 test {
     useJUnitPlatform()
 }
+
+

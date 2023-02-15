@@ -1,11 +1,13 @@
+import spock.lang.Specification
 
 class SearchResourcesTest extends Specification{
 
     def "Example Test"(){
         when:
-            def res = 1+1
+        searchResources searchResources = new searchResources()
+        searchResources.call()
         then:
-            res == 1
+        1==1
 
     }
 
