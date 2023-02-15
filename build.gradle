@@ -29,11 +29,7 @@ configurations {
 dependencies {
     implementation 'org.apache.groovy:groovy:4.0.2'
     testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.4-M1-groovy-4.0'
-    testImplementation group: 'com.google.api.grpc', name: 'grpc-google-cloud-asset-v1', version: '3.14.0'
-    implementation group: 'com.google.api.grpc', name: 'proto-google-cloud-asset-v1', version: '3.14.0'
-    implementation group: 'com.google.cloud', name: 'google-cloud-asset', version: '3.14.0'
     implementation group: 'com.google.api.grpc', name: 'proto-google-cloud-asset-v1p7beta1', version: '3.14.0'
-    implementation 'com.google.api.grpc:proto-google-common-protos:2.8.1'
     implementation group: 'com.google.api', name: 'gax-grpc', version: '2.3.0'
     implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.10.0'
     implementation group: 'com.google.cloud', name: 'google-cloud-storage', version: '2.18.0'
