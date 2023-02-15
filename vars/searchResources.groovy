@@ -1,8 +1,7 @@
 #!/usr/bin/env groovy
 
  @Grapes([
-     @Grab(group='com.google.api.grpc', module='grpc-google-cloud-asset-v1', version='3.14.0', scope='test'),
-    //  @Grab(group='com.google.api.grpc', module='proto-google-cloud-asset-v1', version='3.14.0'),
+    //  @Grab(group='com.google.api.grpc', module='grpc-google-cloud-asset-v1', version='3.14.0', scope='test'),
      @Grab(group='com.google.cloud', module='google-cloud-asset', version='3.14.0'),
      @Grab(group='com.google.api.grpc', module='proto-google-cloud-asset-v1p7beta1', version='3.14.0'),
      @Grab(group='com.google.api', module='gax-grpc', version='2.23.0'),
