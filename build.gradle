@@ -31,7 +31,7 @@ dependencies {
     testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.4-M1-groovy-4.0'
     // https://mvnrepository.com/artifact/com.google.cloud/google-cloud-asset
     implementation group: 'com.google.cloud', name: 'google-cloud-asset', version: '3.14.0'
-    implementation group: 'com.google.api', name: 'gax-grpc', version: '2.3.0'
+    implementation group: 'com.google.api', name: 'gax-grpc', version: '2.23.0'
     implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.10.0'
     implementation group: 'com.google.cloud', name: 'google-cloud-storage', version: '2.18.0'
     ivy 'org.apache.ivy:ivy:2.4.0'
