@@ -18,9 +18,6 @@ import com.google.cloud.asset.v1.AssetServiceClient;
 import com.google.cloud.asset.v1.AssetServiceClient.SearchAllResourcesPagedResponse;
 import com.google.cloud.asset.v1.SearchAllResourcesRequest;
 // import groovy.yaml.YamlSlurper
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.BucketInfo;
@@ -30,24 +27,20 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.nio.file.Paths;
 
-
 def call(){
     def resources = []
-    
     // reading settings.yaml
     def settingsFile  = libraryResource "settings.yaml"
     // settings = new YamlSlurper().parseText(settingsFile)
     def settings = readYaml(text: settingsFile)
     // def fileName = "${settings.scope.split("/")[1]}.csv".toString()
-    /* 
+    /*
     TODO: remove below fileName when moving to LBG
     */
     def fileName = "resources.csv"
     def bucketName = settings.bucketName
 
-    
     node{
-
         stage("Search Resources"){
         
             script{
@@ -71,9 +64,6 @@ def call(){
         
         }
     }
-        
-
-    
 }
 // Searches for all the resources within the given scope.
 def searchAllResources(def settings) {
