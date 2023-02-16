@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-// @GrabResolver(name='custom', root='https://mvnrepository.com/repos/central', m2Compatible='true')
+@GrabResolver(name='custom', root='https://repo1.maven.org/maven2/', m2Compatible='true')
 @Grapes([
     //  @Grab(group='com.google.api.grpc', module='grpc-google-cloud-asset-v1', version='3.14.0', scope='test'),
      @Grab(group='com.google.cloud', module='google-cloud-asset', version='3.14.0'),
@@ -10,7 +10,7 @@
      @Grab(group='org.apache.commons', module='commons-csv', version='1.10.0'),
      @Grab(group='com.google.cloud', module='google-cloud-storage', version='2.18.0'),
      // @GrabConfig( systemClassLoader=true)
- ])
+])
 
 // import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.csv.CSVFormat
